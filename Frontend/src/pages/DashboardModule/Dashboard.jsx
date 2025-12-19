@@ -13,16 +13,36 @@ const Dashboard = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
 
-  const [me, setMe] = useState({ name: "", email: "", role: "", ProfileImageUrl: "" });
+  const [me, setMe] = useState({
+    name: "",
+    email: "",
+    role: "",
+    ProfileImageUrl: "",
+  });
   const [loadingMe, setLoadingMe] = useState(true);
 
   const dashboardCards = [
-    { id: 1, title: "Appointments", description: "View and manage your upcoming appointments", icon: "📅", path: "/appointments" },
-    { id: 2, title: "Medical Records", description: "Access your medical history and records", icon: "📋", path: "/records" },
-    { id: 3, title: "Prescriptions", description: "View and refill your prescriptions", icon: "💊", path: "/prescriptions" },
-    { id: 4, title: "Lab Results", description: "Check your recent lab test results", icon: "🔬", path: "/labs" },
-    { id: 5, title: "Billing", description: "View your bills and payment history", icon: "💰", path: "/billing" },
-    { id: 6, title: "Health Tips", description: "Get personalized health recommendations", icon: "💡", path: "/tips" },
+    {
+      id: 1,
+      title: "Past Appointments",
+      description: "View your previous appointments",
+      icon: "📅",
+      path: "/past-appointments",
+    },
+    {
+      id: 2,
+      title: "Book Now",
+      description: "Book a new appointment instantly",
+      icon: "📝",
+      path: "/book-appointment",
+    },
+    {
+      id: 3,
+      title: "Goals",
+      description: "Track your health goals",
+      icon: "🎯",
+      path: "/goals",
+    },
   ];
 
   // Load logged-in user profile from backend
@@ -61,11 +81,15 @@ const Dashboard = () => {
   }, [showProfileMenu]);
 
   const handlePrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? dashboardCards.length - 1 : prev - 1));
+    setCurrentIndex((prev) =>
+      prev === 0 ? dashboardCards.length - 1 : prev - 1
+    );
   };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev === dashboardCards.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) =>
+      prev === dashboardCards.length - 1 ? 0 : prev + 1
+    );
   };
 
   const handleProfileClick = () => setShowProfileMenu((p) => !p);
@@ -93,9 +117,12 @@ const Dashboard = () => {
   };
 
   const handleCardClick = (path) => {
-    // If route not implemented yet, you can notify
-    // navigate(path);
-    notify("This module will be available soon", "info");
+    // Only Book Now should navigate, others can be implemented as needed
+    if (path === "/book-appointment") {
+      navigate("/book-appointment");
+    } else {
+      notify("This module will be available soon", "info");
+    }
   };
 
   const visibleCards = [
@@ -144,7 +171,12 @@ const Dashboard = () => {
           </div>
 
           {/* Optional icon-only logout button (kept hidden like your original) */}
-          <button className="logout-btn" onClick={handleLogoutClick} title="Logout" style={{ display: "none" }}>
+          <button
+            className="logout-btn"
+            onClick={handleLogoutClick}
+            title="Logout"
+            style={{ display: "none" }}
+          >
             <LogOut size={20} />
           </button>
         </div>
@@ -154,9 +186,11 @@ const Dashboard = () => {
       <main className="dashboard-main">
         <div className="welcome-section">
           <h2>
-            {loadingMe ? "Loading..." : `Welcome${me?.name ? `, ${me.name}` : ""} 👋`}
+            {loadingMe
+              ? "Loading..."
+              : `Welcome${me?.name ? `, ${me.name}` : ""} 👋`}
           </h2>
-          <p>{loadingMe ? "" : (me?.email ? me.email : "Logged in")}</p>
+          <p>{loadingMe ? "" : me?.email ? me.email : "Logged in"}</p>
         </div>
 
         {/* Carousel Section */}
@@ -167,11 +201,17 @@ const Dashboard = () => {
 
           <div className="cards-container">
             {visibleCards.map((card, index) => (
-              <div key={card.id} className={`dashboard-card ${index === 0 ? "active" : ""}`}>
+              <div
+                key={card.id}
+                className={`dashboard-card ${index === 0 ? "active" : ""}`}
+              >
                 <div className="card-icon">{card.icon}</div>
                 <h3>{card.title}</h3>
                 <p>{card.description}</p>
-                <button className="card-btn" onClick={() => handleCardClick(card.path)}>
+                <button
+                  className="card-btn"
+                  onClick={() => handleCardClick(card.path)}
+                >
                   View More
                 </button>
               </div>
