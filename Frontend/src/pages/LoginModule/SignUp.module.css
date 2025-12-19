@@ -1,0 +1,217 @@
+/* --- Global Reset for this module --- */
+/* This ensures padding doesn't break widths */
+* {
+  box-sizing: border-box;
+}
+
+/* --- Variables for easy customization --- */
+.container {
+  /* Dark Page Background */
+  --page-bg: #1e293b;
+
+  /* Light Form Background */
+  --form-bg: #ffffff;
+
+  /* Accent Colors */
+  --main-color: #2563eb;
+  /* Bright Blue */
+  --main-color-hover: #1d4ed8;
+  /* Darker Blue */
+  --secondary-color: #cbd5e1;
+  /* Light Grey for borders */
+  --box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}
+
+/* --- Main Layout --- */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--page-bg);
+}
+
+/* --- The Login/SignUp Card --- */
+.formLogin {
+  background: var(--form-bg);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--secondary-color);
+  padding: 40px;
+  border-radius: 12px;
+  min-width: 450px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.formLogin h2 {
+  margin-bottom: 20px;
+  color: var(--main-color);
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* --- Input Groups --- */
+.formLogin>div {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.formLogin>div>div {
+  position: relative;
+}
+
+/* --- Inputs --- */
+.formLogin input[type="text"],
+.formLogin input[type="email"],
+.formLogin input[type="password"] {
+  background: #f8fafc;
+  /* Slight grey background */
+  border-radius: 6px;
+  outline: 0;
+  border: 1px solid var(--secondary-color);
+  padding: 15px 15px 15px 45px;
+  /* Left padding for icon */
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  color: #334155;
+  transition: all 0.2s ease-in-out;
+
+  /* CRITICAL FIX: Ensures padding is included in the width calculation */
+  box-sizing: border-box;
+}
+
+/* Input Focus States */
+.formLogin input[type="text"]:focus,
+.formLogin input[type="email"]:focus,
+.formLogin input[type="password"]:focus {
+  border-color: var(--main-color);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+/* --- Validation Styles --- */
+.unCompleted>input {
+  border-color: #ef4444 !important;
+}
+
+.completed>input {
+  border-color: #10b981 !important;
+}
+
+/* Validation Icons */
+.unCompleted::after {
+  content: "";
+  background-image: url(../assets/img/close.svg);
+  /* Check your path */
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+}
+
+.completed::after {
+  content: "";
+  background-image: url(../assets/img/check.svg);
+  /* Check your path */
+  background-repeat: no-repeat;
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 15px;
+}
+
+/* --- Icons inside inputs (User, Email, Password icons) --- */
+.formLogin>div>div img {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+}
+
+/* --- Checkbox --- */
+.terms {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}
+
+.formLogin input[type="checkbox"] {
+  accent-color: var(--main-color);
+  margin-right: 10px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* --- Error Messages --- */
+.formLogin>div span.error {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.85rem;
+  color: #ef4444;
+  background-color: #fee2e2;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+/* --- Buttons --- */
+.formLogin button[type="submit"] {
+  display: block;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background: var(--main-color);
+  color: #fff;
+  padding: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 10px;
+}
+
+.formLogin button[type="submit"]:hover {
+  background: var(--main-color-hover);
+}
+
+/* --- Links --- */
+.formLogin span {
+  display: block;
+  text-align: center;
+  margin-top: 15px;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.formLogin span a {
+  color: var(--main-color);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.formLogin span a:hover {
+  text-decoration: underline;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 568px) {
+  .formLogin {
+    min-width: 90%;
+    padding: 20px;
+    margin: 20px;
+  }
+}
