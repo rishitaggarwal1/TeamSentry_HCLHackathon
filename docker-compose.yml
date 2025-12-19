@@ -1,0 +1,49 @@
+services:
+  backend:
+    build:
+      context: ./backend/HealthCare
+    container_name: healthcare_backend
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:8080
+      # SQL Server running on your HOST machine
+      ConnectionStrings__DefaultConnection: "Server=sqlserver,1433;Database=HealthDB;User Id=appuser;Password=Rishit@123;TrustServerCertificate=True;Encrypt=False;"
+
+      # JWT (only if you enabled auth; otherwise you can remove these)
+      Jwt__Key: ${JWT_KEY}
+      Jwt__Issuer: ${JWT_ISSUER}
+      Jwt__Audience: ${JWT_AUDIENCE}
+    ports:
+      - "8080:8080"
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: healthcare_sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Rishit@123"
+    ports:
+      - "1433:1433"
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U appuser -P 'Rishit@123' -Q 'SELECT 1' -C || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build:
+      context: ./frontend/hclfrontend
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL}
+    container_name: healthcare_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:80"
+
+  llm:
+    build: ./llm
+    ports:
+      - "8000:8000"

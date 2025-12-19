@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [ "main", "dev" ]
+
+permissions:
+  contents: read
+  security-events: write # required for CodeQL
+
+jobs:
+  backend:
+    name: Backend (.NET) - Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/HealthCare
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build -c Release --no-restore
+
+      - name: Test
+        run: dotnet test -c Release --no-build
+
+      # basic vuln check (works when advisories are available)
+      - name: List vulnerable packages
+        run: dotnet list package --vulnerable || true
+
+  frontend:
+    name: Frontend (React) - Build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Frontend/
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: Frontent/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Audit (high severity)
+        run: npm audit --audit-level=high || true
+
+  codeql:
+    name: CodeQL (Security Scan)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: csharp, javascript
+          queries: security-extended
+
+      # For C# repositories, CodeQL can often analyze without a build (build-mode none),
+      # but if you prefer, you can add build steps.
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3

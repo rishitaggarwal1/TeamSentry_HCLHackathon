@@ -18,7 +18,11 @@ public class DoctorService : IDoctorService
         _doctors = doctors;
         _images = images;
     }
-
+    public async Task<Guid?> GetDoctorIdByUserIdAsync(Guid userId, CancellationToken ct)
+    {
+        var doctor = await _doctors.GetDoctorByUserIdAsync(userId, ct);
+        return doctor?.Id;
+    }
     public async Task RegisterDoctorAsync(RegisterRequest req, IFormFile licenseFile, CancellationToken ct)
     {
         var email = req.Email.Trim().ToLowerInvariant();

@@ -1,6 +1,9 @@
 ﻿using HealthCare.DTOs;
+using HealthCare.Services;
 using HealthCare.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HealthCare.Controllers;
 
@@ -28,5 +31,21 @@ public class DoctorController : ControllerBase
     {
         await _doctorReg.RegisterDoctorAsync(req, licenseFile, ct);
         return Ok(new { message = "Doctor registered successfully. Waiting for admin approval." });
+    }
+
+    [HttpGet("me")]
+    public async Task<IActionResult> GetMyDoctorProfile(CancellationToken ct)
+    {
+        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (!Guid.TryParse(userIdStr, out var userId))
+            return Unauthorized(new { message = "Invalid user token." });
+
+        var doctorId = await _doctorReg.GetDoctorIdByUserIdAsync(userId, ct);
+
+        if (doctorId is null)
+            return NotFound(new { message = "Doctor profile not found." });
+
+        return Ok(new { doctorId });
     }
 }

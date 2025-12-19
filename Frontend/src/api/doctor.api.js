@@ -8,6 +8,7 @@ export const doctorApi = {
       headers: { "Content-Type": "multipart/form-data" },
     }).then(r => r.data);
   },
+  me: () => http.get("/api/doctor/me"),
   register: (formData) =>
     http.post("/api/doctor/register", formData, {
       headers: { "Content-Type": "multipart/form-data" },

@@ -1,6 +1,6 @@
-// src/pages/DoctorAvailability/DoctorAvailability.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; 
 import "./DoctorAvailability.css";
 import { doctorAvailabilityApi } from "../../api/doctorAvailability.api";
 
@@ -10,6 +10,22 @@ const DoctorAvailability = () => {
   const [selectedDate, setSelectedDate] = useState("");
   const [timeSlots, setTimeSlots] = useState([{ start: "", end: "" }]);
   const [loading, setLoading] = useState(false);
+
+  // Helper to safely get the token from different possible storage locations
+  const getAuthToken = () => {
+    const storedUser = localStorage.getItem("user");
+    const userObj = storedUser ? JSON.parse(storedUser) : null;
+
+    // 1. Check inside the 'user' object (most common)
+    if (userObj?.token) return userObj.token;
+    if (userObj?.accessToken) return userObj.accessToken;
+
+    // 2. Check if stored directly as 'token'
+    const directToken = localStorage.getItem("token");
+    if (directToken) return directToken;
+
+    return null;
+  };
 
   const handleSlotChange = (index, field, value) => {
     const updatedSlots = [...timeSlots];
@@ -25,6 +41,7 @@ const DoctorAvailability = () => {
   };
 
   const handleSave = async () => {
+    // --- 1. Validation ---
     if (!selectedDate) {
       alert("Please select a date.");
       return;
@@ -36,30 +53,56 @@ const DoctorAvailability = () => {
       return;
     }
 
-    // IMPORTANT: In your backend, DoctorId is DoctorProfile.Id (not User.Id).
-    // If you only have userId in localStorage, create an endpoint like:
-    // GET /api/doctor/me -> returns doctorProfileId
-    const stored = localStorage.getItem("user"); // your code :contentReference[oaicite:0]{index=0}
-    const user = stored ? JSON.parse(stored) : null;
-
-    const payload = {
-      doctorId,
-      date: selectedDate, // "YYYY-MM-DD"
-      slots: validSlots.map((s) => ({ start: s.start, end: s.end })),
-    };
-
     setLoading(true);
 
     try {
+      // --- 2. Get Token ---
+      const token = getAuthToken();
+
+      if (!token) {
+        alert("Session expired or invalid. Please log in again.");
+        navigate("/login");
+        return;
+      }
+
+      // --- 3. Fetch Doctor ID from Backend ---
+      // We use the token to ask the backend "Who am I?"
+      // Update the URL below if your backend port is different (e.g., 5001, 7158)
+      const profileRes = await axios.get("http://localhost:5000/api/doctor/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const { doctorId } = profileRes.data;
+
+      if (!doctorId) {
+        throw new Error("Doctor profile not found for this user.");
+      }
+
+      // --- 4. Send Availability Payload ---
+      const payload = {
+        doctorId: doctorId,
+        date: selectedDate,
+        slots: validSlots.map((s) => ({ start: s.start, end: s.end })),
+      };
+
       const res = await doctorAvailabilityApi.generate(payload);
-      alert(`Slots regenerated for ${selectedDate} (Created: ${res.data.createdSlots})`);
+      
+      alert(`Success! Slots generated for ${selectedDate}`);
       navigate("/dashboard");
+
     } catch (error) {
-      const msg =
-        error?.response?.data?.message ||
-        error?.message ||
-        "Failed to save availability.";
-      alert(msg);
+      console.error("Save failed:", error);
+      
+      // Handle specific 401 Unauthorized errors
+      if (error.response && error.response.status === 401) {
+        alert("Your session has expired. Please log in again.");
+        navigate("/login");
+      } else {
+        const msg = error?.response?.data?.message || error?.message || "Failed to save availability.";
+        alert(msg);
+      }
     } finally {
       setLoading(false);
     }

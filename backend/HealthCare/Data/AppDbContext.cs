@@ -11,6 +11,8 @@ public class AppDbContext : DbContext
     public DbSet<DoctorProfile> DoctorProfiles => Set<DoctorProfile>();
     public DbSet<UserSession> UserSessions => Set<UserSession>();
     public DbSet<DoctorSlot> DoctorSlots => Set<DoctorSlot>();
+    public DbSet<PatientProfile> PatientProfiles => Set<PatientProfile>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
