@@ -1,0 +1,77 @@
+############################
+# Environment / Secrets
+############################
+.env
+.env.*
+!.env.example
+
+############################
+# .NET / Visual Studio
+############################
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+.vscode/
+
+# Rider
+.idea/
+
+############################
+# ASP.NET Core
+############################
+appsettings.Development.json
+appsettings.Local.json
+
+############################
+# Node / React / Vite
+############################
+node_modules/
+dist/
+build/
+.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+############################
+# Docker
+############################
+docker-compose.override.yml
+**/Dockerfile.debug
+
+############################
+# OS files
+############################
+.DS_Store
+Thumbs.db
+
+############################
+# Logs
+############################
+*.log
+logs/
+
+############################
+# Database / Local storage
+############################
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+############################
+# Test / Coverage
+############################
+coverage/
+TestResults/
+
+############################
+# Misc
+############################
+*.cache
+*.tmp
