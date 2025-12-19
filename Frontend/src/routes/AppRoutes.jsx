@@ -19,6 +19,7 @@ import PharmacyFinder from "../pages/PharmacyFinder";
 
 // --- NEW IMPORT ---
 import BookAppointment from "../pages/PatientModule/BookAppointment";
+import DoctorAvailability from "../pages/DoctorModule/DoctorAvailability"; // Import the new file
 
 function AppRoutes() {
   return (
@@ -51,6 +52,10 @@ function AppRoutes() {
         {/* Role Based: Doctor */}
         <Route element={<RequireRole allowed={["Doctor"]} />}>
           <Route path="/doctor/upload-license" element={<UploadLicense />} />
+          <Route
+            path="/doctor/set-availability"
+            element={<DoctorAvailability />}
+          />
         </Route>
 
         {/* Default protected redirect */}
