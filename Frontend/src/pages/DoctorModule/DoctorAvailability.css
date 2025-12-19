@@ -1,0 +1,155 @@
+/* Container for the whole page */
+.availability-container {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    background-color: #f8f9fa;
+    /* Light grey background */
+    min-height: 80vh;
+}
+
+/* The white card holding the form */
+.availability-card {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 600px;
+}
+
+.page-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.8rem;
+}
+
+/* Form Groups */
+.form-group,
+.slots-section {
+    margin-bottom: 25px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: #444;
+    margin-bottom: 8px;
+}
+
+.helper-text {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    /* Ensures padding doesn't widen element */
+}
+
+.form-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Time Slot Rows */
+.slot-row {
+    display: flex;
+    align-items: flex-end;
+    /* Aligns inputs with the X button */
+    gap: 15px;
+    margin-bottom: 15px;
+    background-color: #f1f3f5;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.time-input-group {
+    flex: 1;
+}
+
+.input-label {
+    font-size: 0.8rem;
+    color: #666;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Buttons */
+.btn-remove {
+    background: none;
+    border: none;
+    color: #dc3545;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0 10px;
+    height: 40px;
+    /* Match input height roughly */
+}
+
+.btn-remove:hover {
+    color: #a71d2a;
+}
+
+.btn-add-row {
+    background: none;
+    border: none;
+    color: #007bff;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 5px 0;
+    font-size: 0.95rem;
+}
+
+.btn-add-row:hover {
+    text-decoration: underline;
+}
+
+/* Save Button Area */
+.form-actions {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    margin-top: 20px;
+}
+
+.btn-save {
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-save:hover {
+    background-color: #218838;
+}
+
+.btn-save.disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 500px) {
+    .slot-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn-remove {
+        align-self: flex-end;
+        margin-top: -10px;
+    }
+}
